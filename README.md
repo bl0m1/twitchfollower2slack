@@ -6,7 +6,6 @@ twitchfollower2slack is used to notify a Slack-channel when a Twitch channel got
 * Python 3
 * External Python 3 modules
   * dateutil
-  * pytz
   * requests
   * [twitchchannelquery](https://github.com/bl0m1/twitchquery/)
 
@@ -15,7 +14,6 @@ twitchfollower2slack is used to notify a Slack-channel when a Twitch channel got
 
 1. Install following Python 3 modules (pip install):
    * dateutil
-   * pytz
    * requests
 
 1. Make sure twitchchannelquery module is in the same dir as twitchfollower2slack.
