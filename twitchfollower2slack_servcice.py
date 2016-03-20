@@ -68,27 +68,28 @@ def has_new_follower(list):
     if newtime > follower_oldtime:
         new_followers = 1
 
-        while int(get_date(list, new_followers)) > int(follower_oldtime):
+        while int(get_date(list, new_followers)) > int(TIME['time']):
             new_followers += 1
             if new_followers >= int(CONFIG["get_followers"]):
                 break
         save_json(TIME_FILE, {"time": str(newtime)})
-        follower_oldtime = newtime
         return new_followers
     else:
         return 0
 
 def generate_message(channel):
     """ Docstring """
-
     if has_new_follower(channel) > 0:
         if new_followers == 1:
-            print ("1 new follower")
+            message = "1 new follower: " + get_follower_name(channel, 1)
+            print (message)
+            if CONFIG["webhook"]:
+                send_message(CONFIG["webhook"], CONFIG["username"], CONFIG["slack-channel"], message)
         else:
-            message = "new followers (" + str(new_followers) + ")"
+            message = "New followers (" + str(new_followers) + ")"
             new_followers_int = (int(new_followers))
             while (new_followers_int > 0):
-                message += "\n" + str(new_followers_int) + ": " +get_follower_name(channel, new_followers_int)
+                message += "\n" + str(new_followers_int) + ": " + get_follower_name(channel, new_followers_int)
                 new_followers_int -= 1
             print (message)
             if CONFIG["webhook"]:
@@ -119,6 +120,7 @@ print("Querying channel every 60 seconds. Press 'Ctrl + C' to interrupt.\n\n")
 try:
     while True:
         channel.query_follower_list()
+        TIME = read_json(TIME_FILE)
         generate_message(channel)
         time.sleep(60)
 except (SystemExit, KeyboardInterrupt):
