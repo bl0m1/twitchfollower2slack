@@ -39,7 +39,7 @@ def read_json(f):
 
 def default_json(flag):
     if flag is 'config':
-        return {"channel": "swectv", "webhook": "", "username": "twitch", "slack-channel": "#webhook-test", "get_followers": "100"}
+        return {"channel": "geekslive", "webhook": "", "username": "twitch", "slack-channel": "#webhook-test", "get_followers": "100", "oauth_token": ""}
     if flag is 'time':
         return {"time": "0"}
     else:
@@ -49,7 +49,7 @@ if not 'oldtime' in locals():
     oldtime = 1
 
 def get_date(list, nr):
-    time = list.get_follower_list()[nr]['created_at']
+    time = list.get_followers_list()[nr]['created_at']
     time_fixed = time_to_nummeric(time)
     return int(time_fixed)
 
@@ -58,7 +58,7 @@ def time_to_nummeric(time):
     return time.replace("-", "").replace(":", "").replace("T", "").replace("Z", "")
 
 def get_follower_name(list, nr):
-    return list.get_follower_list()[int(nr)-1]['user']['display_name']
+    return list.get_followers_list()[int(nr)-1]['user']['display_name']
 
 
 def has_new_follower(list):
@@ -122,11 +122,11 @@ if not TIME:
         save_json(TIME_FILE, CONFIG)
 
 channel = twitchchannelquery()
-channel.setup(CONFIG["channel"], CONFIG["get_followers"])
+channel.setup(CONFIG["channel"], CONFIG["oauth_token"], CONFIG["get_followers"])
 
 if (Start == 0):
     logger.info("Started!")
-    channel.query_follower_list()
+    channel.query_followers()
     TIME = read_json(TIME_FILE)
     generate_message(channel)
     Start = 1
